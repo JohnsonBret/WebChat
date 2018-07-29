@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="./style.css">
+  </head>
+  <body>
+    <h1>Bine</h1>
+    <section id="appContainer">
+      <div id="messages"></div>
+      <form action="">
+        <input id="m" autocomplete="off" /><button>Send</button>
+      </form>
+    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var client = io();
+      var printerH  = $('messages').innerHeight();
+      var preventNewScroll = false;
+      
+      $('form').submit(function(){
+        client.emit('chatMessage', $('#m').val());
+        $('#m').val('');
+        return false;
+      });
+
+
+      client.on('chatMessage', function(msg){
+        console.log("Client on chat message: " + msg);
+        addNewMessageToChatLog(msg);
+        scrollBottom();
+      });
+
+      function addNewMessageToChatLog(message)
+      {
+        var newMessageDiv = createMessageForChatLog(message);
+        $('#messages').append(newMessageDiv);
+      }
+
+      function createMessageForChatLog(msgTxt)
+      {
+        var messageDiv = $("<div></div>");
+        var messageP = $("<p></p>").text(msgTxt);
+        $(messageDiv).append(messageP);
+        return messageDiv;
+      }
+
+      function scrollBottom(){
+        if(!preventNewScroll)
+        { // if mouse is not over printer
+          $('#messages').stop().animate( {scrollTop: $('#messages')[0].scrollHeight}, 500); // SET SCROLLER TO BOTTOM
+        }
+      }
+
+      $('#messages').hover(function( e ) {
+        preventNewScroll = e.type=='mouseenter' ? true : false ;
+        if(!preventNewScroll){ scrollBottom(); } // On mouseleave go to bottom
+      });
+
+
+    </script>
+  </body>
+</html>
