@@ -39,10 +39,33 @@
 
       function createMessageForChatLog(msgTxt)
       {
-        var messageDiv = $("<div></div>");
-        var messageP = $("<p></p>").text(msgTxt);
+        var messageDiv = createMessageDiv();
+        var messageP = createMessageParagraph(msgTxt);
+        var messageImage = createMessageImage();
+        $(messageDiv).append(messageImage);
         $(messageDiv).append(messageP);
         return messageDiv;
+      }
+
+      function createMessageDiv(){
+          return $("<div></div>", {
+          class : 'messageDiv' 
+        });
+      }
+
+      function createMessageParagraph(messageText){
+          var messagePara = $("<p></p>",{
+          class : 'messageParagraph'
+        });
+        messagePara.text(messageText);
+        return messagePara;
+      }
+
+      function createMessageImage(){
+          return $("<img />", {
+          class : 'messageImage',
+          src : './UserImages/totoro.png'
+        });
       }
 
       function scrollBottom(){

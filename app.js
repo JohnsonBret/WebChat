@@ -8,7 +8,11 @@ app.get('/', function(req, res){
 
 app.get('/style.css', function (req, res) {
   res.sendFile('style.css', { root: __dirname});
-})
+});
+
+app.get('/UserImages/totoro.png', function(req, res){
+  res.sendFile('UserImages/totoro.png', { root: __dirname});
+});
 
 io.on('connection', function(socket){
   socket.on('disconnect', function(){
