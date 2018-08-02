@@ -14,6 +14,10 @@ app.get('/UserImages/totoro.png', function(req, res){
   res.sendFile('UserImages/totoro.png', { root: __dirname});
 });
 
+app.post('/UserImages/Upload', function(req, res){
+  console.log("Received Upload Form");
+});
+
 io.on('connection', function(socket){
   socket.on('disconnect', function(){
     console.log('User Disconnection');
@@ -24,7 +28,7 @@ io.on('connection', function(socket){
 io.on('connection', function(socket){
   socket.on('chatMessage', function(msg){
     io.emit('chatMessage', msg);
-    console.log('message: ' + msg);
+    console.log('message: ' + msg + ' SocketID: ' + socket.id);
   });
 });
 
