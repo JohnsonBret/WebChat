@@ -1,0 +1,19 @@
+
+body { 
+    font: Helvetica, Arial; 
+    background-color: #68a1ad;
+    color: #eee;
+}
+
+#loginContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+#loginForm{
+    border: 2px white solid;
+    padding: 100px;
+}
