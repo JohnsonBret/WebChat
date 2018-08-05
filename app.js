@@ -51,9 +51,43 @@ app.get('/UserImages/totoro.png', function(req, res){
 
 app.post('/login', function(req, res){
   console.log("Do Validation - Communicate with DB");
-  console.log(req.body.username);
+  searchDatabaseForUser(req)
+
   res.sendFile('index.html', { root: __dirname});
 });
+
+function searchDatabaseForUser(request){
+  console.log(request.body.username);
+
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("ChatDB");
+    dbo.collection("users").find({}, { username: 1 }).toArray(function(err, result) {
+      if (err) throw err;
+
+      //Parse reponse
+      //if we don't the username back as a result
+      // Insert the new user into into the database - this function needs to have the insert object fixed
+      console.log(result);
+      console.log("Result Length: " + result.length);
+      db.close();
+    });
+  });
+}
+
+function insertUserIntoDatabase(userInfo)
+{
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("ChatDB");
+    var myobj = { name: "", address: "" };
+    dbo.collection("users").insertOne(myobj, function(err, res) {
+      if (err) throw err;
+      console.log("1 document inserted");
+      db.close();
+    });
+  });
+}
 
 io.on('connection', function(socket){
   socket.on('disconnect', function(){
