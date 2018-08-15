@@ -51,7 +51,9 @@ app.get('/UserImages/totoro.png', function(req, res){
 
 app.post('/login', function(req, res){
   console.log("Do Validation - Communicate with DB");
+  
   searchDatabaseForUser(req)
+
 
   res.sendFile('index.html', { root: __dirname});
 });
@@ -70,18 +72,51 @@ function searchDatabaseForUser(request){
       // Insert the new user into into the database - this function needs to have the insert object fixed
       console.log(result);
       console.log("Result Length: " + result.length);
+
+      console.log("Request Username: " + request.body.username + " DatabaseResultUsername: " + result[0].name);
+
+
+      if(isUsernameInDatabase(request.body.username, result))
+      {
+        console.log("User Already Exists!");
+        
+      }
+      else
+      {
+        insertUserIntoDatabase(request);
+      }
+
       db.close();
     });
   });
 }
+
+function isUsernameInDatabase(userName, dbSearchResults)
+{
+  
+    for(var i = 0; i < dbSearchResults.length; i++)
+    {
+      console.log("Request Username: " + userName + " DatabaseResultUsername: " + dbSearchResults[i].name);
+
+      if(dbSearchResults[i].name == userName)
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+}
+
 
 function insertUserIntoDatabase(userInfo)
 {
   MongoClient.connect(url, function(err, db) {
     if (err) throw err;
     var dbo = db.db("ChatDB");
-    var myobj = { name: "", address: "" };
-    dbo.collection("users").insertOne(myobj, function(err, res) {
+    var userObj = { name: userInfo.body.username, password: userInfo.body.password };
+    dbo.collection("users").insertOne(userObj, function(err, res) {
       if (err) throw err;
       console.log("1 document inserted");
       db.close();
